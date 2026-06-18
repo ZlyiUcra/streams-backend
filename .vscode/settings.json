@@ -1,0 +1,8 @@
+{
+	"[prisma]": {
+		"editor.defaultFormatter": "Prisma.prisma",
+		"editor.formatOnSave": true
+	},
+	"editor.wordWrap": "on",
+	"editor.wordWrapColumn": 100
+}

@@ -13,6 +13,15 @@ export class AccountService {
 		const users = await this.prismaService.user.findMany();
 		return users;
 	}
+
+	public async me(id: string) {
+		const user = await this.prismaService.user.findUnique({
+			where: {
+				id
+			}
+		});
+		return user;
+	}
 	public async create(input: CreateUserInput) {
 		const { userName, email, password } = input;
 

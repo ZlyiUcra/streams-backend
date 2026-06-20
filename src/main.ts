@@ -37,7 +37,7 @@ async function bootstrap() {
 				sameSite: 'lax'
 			},
 			store: new RedisStore({
-				client: redis,
+				client: redis.client,
 				prefix: config.getOrThrow<string>('SESSION_FOLDER')
 			})
 		})

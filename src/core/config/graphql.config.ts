@@ -1,14 +1,9 @@
 import { type ApolloDriverConfig } from '@nestjs/apollo';
 import { ConfigService } from '@nestjs/config';
-import type { Request, Response } from 'express';
 import { join } from 'path';
 
+import { GqlContext } from '@/src/shared/types/gql-context.types';
 import { isDev } from '@/src/shared/utils/is-dev';
-
-export interface GqlContext {
-	req: Request;
-	res: Response;
-}
 
 export function getGraphQLConfig(
 	configService: ConfigService

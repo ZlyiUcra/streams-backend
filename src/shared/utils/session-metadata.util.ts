@@ -1,10 +1,14 @@
 import DeviceDetector from 'device-detector-js';
 import { type Request } from 'express';
 import { lookup } from 'geoip-lite';
+import * as countries from 'i18n-iso-countries';
+import enCountries from 'i18n-iso-countries/langs/en.json';
 
 import { type SessionMetadata } from '../types/session-metadata.types';
 
 import { IS_DEV_ENV } from './is-dev';
+
+countries.registerLocale(enCountries);
 
 export function getSessionMetada(
 	req: Request,
@@ -22,7 +26,9 @@ export function getSessionMetada(
 	const device = new DeviceDetector().parse(userAgent);
 	return {
 		location: {
-			country: location?.country || 'Unknown',
+			country:
+				countries.getName(location?.country as string, 'en') ||
+				'Unknown',
 			city: location?.city || 'Unknown',
 			latitude: location?.ll[0] || 0,
 			longitude: location?.ll[1] || 0

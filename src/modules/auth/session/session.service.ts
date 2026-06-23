@@ -46,6 +46,9 @@ export class SessionService {
 				if (session.userId === userId) {
 					userSessions.push({
 						...session,
+						createdAt: session.createdAt
+							? new Date(session.createdAt)
+							: session.createdAt,
 						id: key.split(':')[1]
 					});
 				}
@@ -63,14 +66,18 @@ export class SessionService {
 	}
 	public async findCurrent(req: Request) {
 		const sessionId = req.session.id;
+		console.log(sessionId);
 
 		const sessionData = (await this.redisService.client.get(
-			`${this.configService.getOrThrow<string>('SESSION_FOLDER')}:${sessionId}`
+			`${this.configService.getOrThrow<string>('SESSION_FOLDER')}${sessionId}`
 		)) as string;
 
 		const session = JSON.parse(sessionData) as SessionData;
 		return {
 			...session,
+			createdAt: session.createdAt
+				? new Date(session.createdAt)
+				: session.createdAt,
 			id: sessionId
 		};
 	}
@@ -141,7 +148,7 @@ export class SessionService {
 			throw new ConflictException('Current session cannot be deleted');
 		}
 		await this.redisService.client.del(
-			`${this.configService.getOrThrow<string>('SESSION_FOLDER')}:${id}`
+			`${this.configService.getOrThrow<string>('SESSION_FOLDER')}${id}`
 		);
 		return true;
 	}

@@ -41,7 +41,7 @@ type Mutation {
 
 type Query {
   findAllUsers: [UserModel!]!
-  findCurrentSessions: SessionModel!
+  findCurrentSession: SessionModel!
   findProfile: UserModel!
   findSessionsByUser: [SessionModel!]!
 }
@@ -53,7 +53,7 @@ type SessionMetadataModel {
 }
 
 type SessionModel {
-  createAt: DateTime!
+  createdAt: DateTime!
   id: ID!
   metadata: SessionMetadataModel!
   userId: String!

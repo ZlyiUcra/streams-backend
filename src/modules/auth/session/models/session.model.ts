@@ -25,13 +25,13 @@ export class LocationModel implements LocationInfo {
 @ObjectType()
 export class DeviceModel implements DeviceInfo {
 	@Field(() => String)
-	public browser!: string;
+	public browser?: string;
 
 	@Field(() => String)
-	public os!: string;
+	public os?: string;
 
 	@Field(() => String)
-	public type!: string;
+	public type?: string;
 }
 
 @ObjectType()
@@ -55,7 +55,7 @@ export class SessionModel {
 	public userId!: string;
 
 	@Field(() => Date)
-	public createAt!: Date;
+	public createdAt!: Date;
 	@Field(() => SessionMetadataModel)
 	public metadata!: SessionMetadataModel;
 }

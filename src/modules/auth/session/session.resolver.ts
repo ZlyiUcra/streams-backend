@@ -20,7 +20,7 @@ export class SessionResolver {
 		return await this.sessionService.findByUser(req);
 	}
 	@Authorization()
-	@Query(() => SessionModel, { name: 'findCurrentSessions' })
+	@Query(() => SessionModel, { name: 'findCurrentSession' })
 	public async findCurrent(@Context() { req }: GqlContext) {
 		return await this.sessionService.findCurrent(req);
 	}
@@ -40,7 +40,6 @@ export class SessionResolver {
 		return this.sessionService.logout(req);
 	}
 
-	@Authorization()
 	@Mutation(() => Boolean, { name: 'clearSessionCookie' })
 	public clearSession(@Context() { req }: GqlContext) {
 		return this.sessionService.clearSession(req);

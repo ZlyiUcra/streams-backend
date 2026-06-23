@@ -6,9 +6,9 @@ export interface LocationInfo {
 }
 
 export interface DeviceInfo {
-	browser: string;
-	os: string;
-	type: string;
+	browser?: string;
+	os?: string;
+	type?: string;
 }
 
 export interface SessionMetadata {

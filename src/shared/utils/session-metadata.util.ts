@@ -34,9 +34,9 @@ export function getSessionMetada(
 			longitude: location?.ll[1] || 0
 		},
 		device: {
-			browser: device.client?.name,
-			os: device.os?.name,
-			type: device.device?.type
+			browser: device.client?.name || 'Unknown',
+			os: device.os?.name || 'Unknown',
+			type: device.device?.type || 'Unknown'
 		},
 		ip
 	} as SessionMetadata;

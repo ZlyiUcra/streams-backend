@@ -56,4 +56,6 @@ export class SessionModel {
 
 	@Field(() => Date)
 	public createAt!: Date;
+	@Field(() => SessionMetadataModel)
+	public metadata!: SessionMetadataModel;
 }

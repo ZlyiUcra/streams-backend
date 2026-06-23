@@ -12,6 +12,7 @@ import { type SessionData } from 'express-session';
 
 import { PrismaService } from '@/src/core/prisma/prisma.service';
 import { RedisService } from '@/src/core/redis/redis.service';
+import { Authorization } from '@/src/shared/decorators/auth.decorator';
 import { getSessionMetada } from '@/src/shared/utils/session-metadata.util';
 
 import { LoginInput } from './inputs/login.input';
@@ -111,6 +112,7 @@ export class SessionService {
 		});
 	}
 
+	@Authorization()
 	public async logout(req: Request) {
 		return new Promise((resolve, reject) => {
 			req.session.destroy(err => {

@@ -1,7 +1,7 @@
 import {
+	BadRequestException,
 	ConflictException,
 	Injectable,
-	InternalServerErrorException,
 	NotFoundException,
 	UnauthorizedException
 } from '@nestjs/common';
@@ -14,6 +14,9 @@ import { PrismaService } from '@/src/core/prisma/prisma.service';
 import { RedisService } from '@/src/core/redis/redis.service';
 import { Authorization } from '@/src/shared/decorators/auth.decorator';
 import { getSessionMetada } from '@/src/shared/utils/session-metadata.util';
+import { destroySession, saveSession } from '@/src/shared/utils/session.util';
+
+import { VerificationService } from '../verification/verification.service';
 
 import { LoginInput } from './inputs/login.input';
 
@@ -22,7 +25,8 @@ export class SessionService {
 	public constructor(
 		private readonly prismaService: PrismaService,
 		private readonly configService: ConfigService,
-		private readonly redisService: RedisService
+		private readonly redisService: RedisService,
+		private readonly verificationService: VerificationService
 	) {}
 
 	public async findByUser(req: Request) {
@@ -66,7 +70,6 @@ export class SessionService {
 	}
 	public async findCurrent(req: Request) {
 		const sessionId = req.session.id;
-		console.log(sessionId);
 
 		const sessionData = (await this.redisService.client.get(
 			`${this.configService.getOrThrow<string>('SESSION_FOLDER')}${sessionId}`
@@ -99,43 +102,20 @@ export class SessionService {
 		if (!isValidPassworrd) {
 			throw new UnauthorizedException('Wrong password');
 		}
+		if (!user.isEmailVerified) {
+			await this.verificationService.sendVerificationToken(user);
+			throw new BadRequestException(
+				'Account is not verified. Please check your email for confirmation'
+			);
+		}
 		const metadata = getSessionMetada(req, userAgent);
 
-		return new Promise((resolve, reject) => {
-			req.session.createdAt = new Date();
-			req.session.userId = user.id;
-			req.session.metadata = metadata;
-
-			req.session.save(err => {
-				if (err) {
-					return reject(
-						new InternalServerErrorException(
-							'Session was not saved'
-						)
-					);
-				}
-				resolve(user);
-			});
-		});
+		return saveSession(req, user, metadata);
 	}
 
 	@Authorization()
 	public async logout(req: Request) {
-		return new Promise((resolve, reject) => {
-			req.session.destroy(err => {
-				if (err) {
-					return reject(
-						new InternalServerErrorException(
-							'Session was not destroyed'
-						)
-					);
-				}
-				req.res?.clearCookie(
-					this.configService.getOrThrow<string>('SESSION_NAME')
-				);
-				resolve(true);
-			});
-		});
+		return destroySession(req, this.configService);
 	}
 	public clearSession(req: Request) {
 		req.res?.clearCookie(

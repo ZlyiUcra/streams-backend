@@ -23,6 +23,15 @@ services:
             - redis_data:/data
         networks:
             - backend
+    mailpit:
+        container_name: mailpit
+        image: axllent/mailpit:latest
+        restart: always
+        ports:
+            - '1025:1025' # SMTP
+            - '8025:8025' # Web UI -> http://localhost:8025
+        networks:
+            - backend
 
 volumes:
     postgres_data:

@@ -1,3 +1,4 @@
+import { ValidationPipe } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { NestFactory } from '@nestjs/core';
 import { RedisStore } from 'connect-redis';
@@ -17,7 +18,7 @@ async function bootstrap() {
 
 	app.use(cookieParser(config.getOrThrow<string>('COOKIES_SECRET')));
 
-	app.useGlobalPipes();
+	app.useGlobalPipes(new ValidationPipe({ transform: true }));
 
 	app.use(
 		session({

@@ -127,7 +127,7 @@ export class SessionService {
 		}
 		const metadata = getSessionMetada(req, userAgent);
 
-		return saveSession(req, user, metadata);
+		return { user: await saveSession(req, user, metadata) };
 	}
 
 	@Authorization()

@@ -3,7 +3,7 @@ import { IsEmail, IsNotEmpty, IsString } from 'class-validator';
 
 @InputType()
 export class ChangeEmailInput {
-	@Field()
+	@Field(() => String)
 	@IsString()
 	@IsNotEmpty()
 	@IsEmail()
